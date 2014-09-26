@@ -2,15 +2,7 @@
 
 var stage;
 
-
-var VERTEX_INNER_RADIUS = 5.5;
-var VERTEX_OUTER_RADIUS = 10.5;
 var EDGE_WIDTH = 5;
-
-
-
-// Debug
-var p;
 
 /**
  * @class Vertex
@@ -19,16 +11,6 @@ var p;
  */
 function Vertex(posX, posY) {
     this.object = new createjs.Shape();
-    
-    // Donut implementation
-    // this.object.graphics
-    //         .setStrokeStyle(VERTEX_OUTER_RADIUS - VERTEX_INNER_RADIUS)
-    //         .beginStroke("black")
-    //         .arc(this.x, this.y, (VERTEX_INNER_RADIUS+VERTEX_OUTER_RADIUS)/2, 0, 360);
-    // this.object.alpha = 0.2;
-    // 
-    // this.object.hitArea = new createjs.Shape();
-    // this.object.hitArea.graphics.beginFill("red").drawCircle(this.x, this.y, VERTEX_OUTER_RADIUS);
     
     this.object.graphics.beginFill("black").drawCircle(0, 0, 7.5);
     this.object.x = posX;
@@ -106,8 +88,8 @@ function Polygon(startPosX, startPosY) {
     stage.addChild(this.container);
     
     this.vertices[0].object.on('click', function(event, polygon) {
-    	polygon.complete();
-    	console.log("completed");
+        polygon.complete();
+        console.log("completed");
     }, null, true, this);
  
     // polygons.push(this);
@@ -115,69 +97,91 @@ function Polygon(startPosX, startPosY) {
 }
 Polygon.polygon = null;
 Polygon.reset = function() {
-	if (Polygon.polygon) {
-		stage.removeChild(Polygon.polygon.container);
-		Polygon.polygon = null;
-	}
+    if (Polygon.polygon) {
+        stage.removeChild(Polygon.polygon.container);
+        Polygon.polygon = null;
+    }
 }
 Polygon.init = function() {
-	Polygon.reset();
-	
-	if (! stage.hasEventListener("stagemouseup")) {
-		Polygon.StageAddPolygonClickListener = stage.on("stagemouseup", function(event) {
-			if (!stage.mouseInBounds) {
-				return;
-			}
-			
-			Polygon.polygon = new Polygon(event.stageX, event.stageY);
-			
-			Polygon.StageAddSideClickListener = stage.on("stagemouseup", function(event) {
-				if (! stage.getObjectsUnderPoint().length) {
-					Polygon.polygon.addSide(event.stageX, event.stageY);
-				}
-			});
-		}, null, true);
-	}
-	
+    Polygon.reset();
+    
+    if (! stage.hasEventListener("stagemouseup")) {
+        Polygon.StageAddPolygonClickListener = stage.on("stagemouseup", function(event) {
+            if (!stage.mouseInBounds) {
+                return;
+            }
+            
+            Polygon.polygon = new Polygon(event.stageX, event.stageY);
+            
+            Polygon.StageAddSideClickListener = stage.on("stagemouseup", function(event) {
+                if (! stage.getObjectsUnderPoint().length) {
+                    Polygon.polygon.addVertex(event.stageX, event.stageY);
+                }
+            });
+        }, null, true);
+    }
+    
 }
 Polygon.prototype._addEdge = function(edge, edgeIndex) {
     if (typeof edgeIndex === 'undefined') {
         edgeIndex = this.edges.length;
-    } else {
-        if (edgeIndex > this.vertices.length) { // assymetry between edge and vertex here
-            console.log("illegal edge number");
-            return false
-        }
+    } else if (edgeIndex > this.vertices.length) { // assymetry between edge and vertex here
+        console.error("illegal edge number");
+        return false
     }
+    
     if (!edge) {
         return false;
     }
     
-    this.edges[edgeIndex] = edge;
+    this.edges.splice(edgeIndex, 0, edge);
     this.container.addChildAt(edge.object, 0);
     stage.update();
     return true;
 }
+Polygon.prototype._removeEdge = function(edgeIndex) {
+    if (typeof edgeIndex === 'undefined') {
+        edgeIndex = this.edges.length-1;
+    } else if (vertexIndex >= this.edges.length) {
+        console.error("illegal edge number");
+    }
+    
+    var removedEdge = this.edges.splice(edgeIndex, 1)[0];
+    this.container.removeChild(removedEdge.object);
+    stage.update();
+    return removedEdge;
+}
 Polygon.prototype._addVertex = function(vertex, vertexIndex) {
     if (typeof vertexIndex === 'undefined') {
         vertexIndex = this.vertices.length;
-    } else {
-        if (vertexIndex > this.vertices.length) {
-            console.log("illegal vertex number");
-            return false;
-        }
+    } else if (vertexIndex > this.vertices.length) {
+        console.error("illegal vertex number");
+        return false;
     }
     
     if (!vertex) {
         return false;
     }
 
-    this.vertices[vertexIndex] = vertex;
+    this.vertices.splice(vertexIndex, 0, vertex);
     this.container.addChild(vertex.object);
     stage.update();
     return true;
 }
-Polygon.prototype.addSide = function(endPosX, endPosY) {
+Polygon.prototype._removeVertex = function(vertexIndex) {
+    if (typeof vertexIndex === 'undefined') {
+        vertexIndex = this.vertices.length - 1;
+    } else if (vertexIndex >= this.vertices.length) {
+        console.error("illegal vertex number");
+        return false;
+    }
+    
+    var removedVertex = this.vertices.splice(vertexIndex, 1)[0];
+    this.container.removeChild(removedVertex.object);
+    stage.update();
+    return removedVertex;
+}
+Polygon.prototype.addVertex = function(endPosX, endPosY) {
     this._addVertex(new Vertex(endPosX, endPosY));
     
     var numVertices = this.vertices.length;
@@ -185,8 +189,19 @@ Polygon.prototype.addSide = function(endPosX, endPosY) {
     
     return this;
 }
+Polygon.prototype.removeVertex = function(vertex) {
+    vertexIndex = this.vertices.indexOf(vertex);
+    
+    if (vertexIndex >= 0) {
+        this._removeVertex(vertexIndex);
+        
+        this._removeEdge(this.edges.indexOf(vertex.edge1));
+        this._removeEdge(this.edges.indexOf(vertex.edge2));
+        this._addEdge(new Edge(vertex.edge1.vertex1, vertex.edge2.vertex2), vertexIndex-1);
+    }
+}
 Polygon.prototype.complete = function() {
-	console.log("completed");
+    console.log("completed");
     this._addEdge(new Edge(this.vertices[this.vertices.length-1], this.vertices[0]));
     
     stage.off("stagemouseup", Polygon.StageAddSideClickListener);
