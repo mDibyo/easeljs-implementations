@@ -1,0 +1,226 @@
+@import url(http://fonts.googleapis.com/css?family=Raleway);
+@import url(http://fonts.googleapis.com/css?family=Varela);
+@import url(http://fonts.googleapis.com/css?family=Sanchez);
+body, input, html, select {
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  color: #333;
+  outline: none;
+  resize: none;
+  background: #E8E9EB;
+}
+
+
+input {
+  margin-top: 8px;
+  margin-bottom:8px;
+  background: #FFF;
+  width: 158px;
+  height: 28px;
+}
+input:focus {
+  background: #F8F8F8;
+}
+input:disabled {
+  color: #999;
+}
+
+
+h1 {
+  font-size: 50px;
+  font-family: 'Sanchez', serif;
+
+}
+h1 span{
+  padding-top: 4px;
+  font-size: 16px;
+  font-family: 'Varela', sans-serif;
+  display:block;
+}
+
+
+button {
+  width: 160px;
+  border-radius: 2px;
+  background: #91909A;
+  font-weight: 200;
+  font-size: 14px;
+  text-decoration: center;
+  border: none;
+  color: #FFF;
+  margin-top: 8px;
+  margin-bottom:8px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  outline: none;
+  cursor: pointer;
+}
+button:hover {
+  width: 160px;
+  border-radius: 2px;
+  background: #777;
+  font-weight: 200;
+  font-size: 14px;
+  text-decoration: center;
+  border: none;
+  color: #FFF;
+  margin-top: 8px;
+  margin-bottom:8px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  outline: none;
+  cursor: pointer;
+}
+button.active {
+  background: #00cc00;
+}
+button.busy {
+  background: #cc0000;
+}
+
+div {
+  /*border: 2px solid;*/
+  /*padding: 4px;*/
+}
+
+#bodyblock {
+  position: absolute;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, 0%)
+}
+
+#titleblock {
+  text-align: center;
+  overflow: auto;
+}
+
+#notifications {
+  width: 1389.5px;
+  margin-left: 2px;
+  margin-right: 2px;
+  overflow: auto;
+  border: 2px solid;
+  font-size: 20px;
+}
+#notification {
+  display: block;
+}
+.notification {
+  vertical-align: center;
+  margin: 2px;
+}
+#notificationstext {
+  float: left;
+  padding-left: 10%;
+  width: 80%;
+}
+#notificationsdetails {
+  float: right;
+  cursor: pointer;
+  text-decoration: underline;
+  display: none;
+  margin-right: 10px;
+}
+
+#demopane {
+
+}
+
+#textpane {
+  float: left;
+  width: 230px;
+  overflow: hidden; /* understand */
+}
+.helpbox {
+  margin : 2px;
+  border : 2px solid;
+  background-color : #C8CCD3;
+  top : 5px;
+  text-align : justify;
+}
+
+#staticbox {
+  padding: 15px 15px;
+  font-size:14px;
+  color:black;
+}
+
+#staticbox p {
+  margin:0;
+}
+
+#stagepane {
+  float : left;
+  overflow : hidden;
+  position: relative;
+}
+
+#stage {
+  margin-top: 2px;
+  border: 2px solid;
+  background: #fff;
+}
+
+#requestresponsedisplay {
+  z-index: 2;
+  position: absolute;
+  top: 2px;
+  display: none;
+  background: #fff;
+  border: 2px solid;
+  height: 509px;
+  width: 964px;
+  font-family: Courier New;
+  font-size: 16px;
+  font-weight: bold;
+}
+#request {
+  float: left;
+  background: #96B2D0;
+  margin: 2px;
+  width: 47.5%;
+  height: 99%;
+  padding: 10px;
+  display: table-cell;
+}
+#response {
+  float: right;
+  background: #91909A;
+  margin: 2px;
+  width: 47.5%;
+  height: 99%;
+  padding: 10px;
+  display: table-cell;
+}
+
+#controlpane {
+  float: left;
+  width: 200px;
+  
+}
+#changerobot {
+
+}
+#serviceindicators {
+  margin: 2px;
+  border: 2px solid;
+  text-align: center;
+  background-color:#C8CCD3;
+}
+#modes {
+  margin : 2px;
+  border: 2px solid;
+  text-align: center;
+  background-color:#C8CCD3;
+}
+#servicetitle {
+  margin:0px;
+  font-size: 22px;
+  font-weight: bold;
+  text-align: left;
+  padding: 8px 0px 0px 12px;
+}

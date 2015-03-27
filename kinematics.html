@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8"/>
+<head>
+    <title>Brass kinematics and motion planning demo</title>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="css/common.css" />
+    <link rel="stylesheet" type="text/css" href="css/kinematics.css" />
+
+    <script src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>
+
+    <script type="text/javascript" src="js/util.js"></script>
+    <script type="text/javascript" src="js/elements.js"></script>
+    <script type="text/javascript" src="js/modes.js"></script>
+    <script type="text/javascript" src="js/indicators.js"></script>
+    <script type="text/javascript" src="js/items.js"></script>
+    <script type="text/javascript" src="js/robots.js"></script>
+    <script type="text/javascript" src="js/services.js"></script>
+    <script type="text/javascript" src="js/kinematics.js"></script>
+
+    <script type="text/javascript">
+        function changeJoints() {
+            var arm0 = document.getElementById("arm0").value
+            var arm1 = document.getElementById("arm1").value
+            var arm2 = document.getElementById("arm2").value
+            
+            var triDOFRobot;
+            robots.forEach(function(robot) {
+                if (robot instanceof TriDOFRobot) {
+                    triDOFRobot = robot;
+                }
+            });
+            if (triDOFRobot) {
+                triDOFRobot.setJointAngles([arm0, arm1, arm2]);
+            }
+        }
+    </script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','http://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-55424669-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    
+</head>
+
+<body onload="kinematicsSetup();">
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> 
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <div id="bodyblock">
+        <div id="titleblock">
+            <h1> Brass <span> an Architecture and Prototype for "Robotics and Automation as a Service"</span></h1>
+            <div id="notifications">
+                <div id="notificationstextKinematics" class="notification">&nbsp;</div>
+                <div id="notificationsdetails" class="notification" onclick="showHideDetails();"><!-- <button id="showdetailsButton" onclick="showHideDetails()">Show Details</button> -->
+                    Show Details
+                </div>
+            </div>
+        </div>
+        <div id="demopane">
+            <div id="textpane">
+                <div id="staticbox" class="helpbox">
+                    <p id="statichelp"> Welcome to the Kinematics and Motion Planning services demonstration page. The buttons on the right side allow you to change the mode and add or remove obstacles.  </p>
+
+                </div>
+                <div id="dynamicboxKinematics" class="helpbox">
+                    <span>Help Box</span><p id="dynamichelp"> Click and drag the circular base of the robot to move it, or click and drag any of the arms to change its position. You can also directly enter joint values below. Click and drag the obstacles to move them. To rotate or resize an obstacle, click on it once; use the green handle to rotate, and the black handle to resize.</p>
+                </div>
+            </div>
+            <div id="stagepane">
+                <div id="stage">
+                    <canvas id="testCanvas" width="960" height="500"></canvas>
+                </div>
+                <div id="requestresponsedisplay">
+                    <div id="request"></div>
+                    <div id="response"></div>
+                </div>
+                <div id="jointangles">
+                    <div id="jointanglesbody">
+                        <b>Joint angles:</b>
+                        <input type="text" id="arm0">
+                        <input type="text" id="arm1">
+                        <input type="text" id="arm2">
+                        <button id="changeJointsButton" onclick="changeJoints();">Set Joints</button>
+                    </div>
+                </div>
+            </div>
+            <div id="controlpane">
+                <div id="serviceindicators">
+                    <p id="servicetitle"> Modes </p>
+                      <div> <button id="kinematicsIndicatorButton">Enter Kinematics Mode</button> </div>
+                    <div style="padding-bottom:4px;"> <button id="trajoptIndicatorButton">Enter Motion Planning Mode</button> </div>
+                </div>
+                <div id="modes"> 
+                    <p id="servicetitle"> Obstacle Modes </p>
+                    <div> <button id="addRectObstacleModeButton">Add Rectangle Obstacle</button> </div>
+                    <div> <button id="addCircleObstacleModeButton">Add Circle Obstacle</button> </div>
+                    <div style="padding-bottom:4px;"> <button id="removeModeButton">Remove Obstacles</button> </div>
+                </div>
+                <div id="changerobot"></div>        
+                
+            </div>
+        </div>
+    </div>
+    <script>
+    $('#kinematicsIndicatorButton').popover({
+            title: 'Kinematics Mode',
+            content: 'To view the pose of the robot, click the "Kinematics Mode" button.',
+            trigger: 'hover',
+            placement: 'left'
+    })
+    $('#trajoptIndicatorButton').popover({
+            title: 'Trajopt Mode',
+            content: 'To plan a path around obstacles, click the "Trajopt Mode" button.',
+            trigger: 'hover',
+            placement: 'left'
+    })
+    $('#addRectObstacleModeButton').popover({
+            title: 'Add Rectangle Obstacle Mode',
+            content: 'To add rectangular obstacle click this button and then somewhere on the canvas.',
+            trigger: 'hover',
+            placement: 'left'
+    })
+    $('#addCircleObstacleModeButton').popover({
+            title: 'Add Circlular Obstacle Mode',
+            content: 'To add circlular obstacle click this button and then somewhere on the canvas.',
+            trigger: 'hover',
+            placement: 'left'
+    })
+    $('#removeModeButton').popover({
+            title: 'Remove Mode',
+            content: 'To remove  obstacle click this button and then on red dot on the canvas.',
+            trigger: 'hover',
+            placement: 'left'
+    })
+    </script>
+</body>
+
+</html>

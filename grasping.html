@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<meta charset="utf-8"/>
+<head>
+    <title>Brass grasping demo</title>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="css/common.css" />
+    <link rel="stylesheet" type="text/css" href="css/grasping.css" />
+    
+    <script src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>
+
+    <script type="text/javascript" src="js/util.js"></script>
+    <script type="text/javascript" src="js/elements.js"></script>
+    <script type="text/javascript" src="js/modes.js"></script>
+    <script type="text/javascript" src="js/indicators.js"></script>
+    <script type="text/javascript" src="js/items.js"></script>
+    <script type="text/javascript" src="js/services.js"></script>
+    <script type="text/javascript" src="js/polygon.js"></script>
+    <script type="text/javascript" src="js/grasping.js"></script>
+
+    <script type="text/javascript">
+    function changeGripperWidth(newValue) {
+        indicators["Grasping"].gripper.length = newValue;
+        indicators["Grasping"].gripper.update();
+    }
+    </script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','http://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-55424669-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</head>
+
+<body onload="graspingSetup();">
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> 
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <div id="bodyblock">
+        <div id="titleblock">
+            <h1> Brass <span> an Architecture and Prototype for "Robotics and Automation as a Service"</span></h1>
+            <div id="notifications">
+                <div id="notificationstextGrasping" class="notification">&nbsp;</div>
+                <!-- <div id="notificationsdetails" class="notification" onclick="showHideDetails();">
+                    Show Details
+                </div> -->
+            </div>
+        </div>
+        <div id="demopane">
+            <div id="textpane">
+                <div id="staticbox" class="helpbox">
+                    <p id="statichelp"> Welcome to the Grasping service demonstration page. The buttons on the right side allow you to configure and analyze grasps under pose uncertainty.  Read about the algorithm <a href="http://me.berkeley.edu/~benk/papers/Kehoe_RSS_workshop_2014.pdf">here</a>.</p>
+
+                </div>
+                <div id="dynamicboxGrasping" class="helpbox">
+                    <span>Help Box</span><p id="dynamichelp">To start, draw a polygon.</p>
+                </div>
+            </div>
+            <div id="stagepane">
+                <div id="stage">
+                    <canvas id="testCanvas" width="960" height="500"></canvas>
+                </div>
+                <div id="requestresponsedisplay">
+                    <div id="request"></div>
+                    <div id="response"></div>
+                </div>
+
+            </div>
+            <div id="controlpane">
+                <div id="serviceindicators">
+                    <!-- <p id="servicetitle"> Grasping </p> -->
+                    <div><button onclick="location.reload();" class="active" id="newPolygonButton">New Polygon</button></div>
+                    <div> <button id="graspingIndicatorButton">Enter Grasping Mode</button> </div>
+                    <div>
+                        <button id="prevGraspButton" class="graspSelectionRow"> &#8592; </button>
+                        <div id="graspIndexDiv" class="graspSelectionRow"></div>
+                        <button id="nextGraspButton" class="graspSelectionRow"> &#8594; </button>
+                    </div>
+                    <div>
+                        <div class="graspQualityRow">Grasp Quality:&nbsp;<span id="graspQualityDiv" class="graspQualityRow"></span></div>
+                    </div>
+                </div>
+                <div id="modes"> 
+                    <p id="servicetitle"> Configuration </p>
+                    <div class="graspConfiguration">Gripper Width<br><input type="number" id="gripperWidthInput" value="200" min="30" oninput="changeGripperWidth(this.value);" /></div>
+                    <!-- <div class="graspConfiguration">Number of Samples<br><input type="number" id="numSamplesInput" value="50"/></div> -->
+                    <div class="graspConfiguration">Positional Variance<br><input type="text" id="posVarianceInput" /></div>
+                    <div class="graspConfiguration">Angular Variance (in &deg;)<br><input type="text" id="angVarianceInput" /></div>
+                </div>
+      
+                
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $('#graspingIndicatorButton').popover({
+                title: 'Generate Grasps',
+                content: 'To generate grasps for a polygon, click the "Generate Grasps" button after creating the polygon. ',
+                trigger: 'hover',
+                placement: 'left'
+        })
+        $('#newPolygonButton').popover({
+                title: 'New Polygon',
+                content: 'To start over, click the "New Polygon" button. ',
+                trigger: 'hover',
+                placement: 'left'
+        })
+    </script>
+
+    
+</body>

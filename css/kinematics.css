@@ -1,0 +1,40 @@
+#notificationstextKinematics {
+  float: left;
+  padding-left: 10%;
+  width: 80%;
+}
+
+#jointangles {
+  text-align : center;
+  line-height: 100%;
+  overflow: auto;
+  display: table;
+  width: 100%;
+}
+#jointangleshead {
+  float: left;
+  display: table-column;
+  vertical-align: center;
+}
+#jointanglesbody {
+  /*text-align: center;
+  display: table-column;
+  float: right;*/
+}
+#jointangles {
+  display: none;
+}
+
+#dynamicboxKinematics {
+  padding: 15px 15px;
+  font-size:13px;
+  height:353px;
+  color:black;
+}
+#dynamicboxKinematics span {
+  font-size:18px;
+  font-weight: bold;
+  display: block;
+  padding-bottom: 15px;
+  color:black;
+}
